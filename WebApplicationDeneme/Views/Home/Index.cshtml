@@ -1,0 +1,58 @@
+﻿@using WebApplicationDeneme.Models
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+
+@model IEnumerable<WebApplicationDeneme.Models.Blog>
+
+<h2>Son Eklenen Bloglar</h2>
+
+<div class="row">
+    @foreach (var blog in Model.Take(3))
+    {
+        <div class="col-md-4">
+            <div class="card mb-3">
+                @if (!string.IsNullOrEmpty(blog.ImagePath))
+                {
+                    <img src="@blog.ImagePath" class="card-img-top" />
+                }
+                <div class="card-body">
+                    <h5 class="card-title">@blog.Title</h5>
+                    <p class="card-text">@blog.ShortText</p>
+                    <a asp-controller="Blogs" asp-action="Index" class="btn btn-primary">Devamını Oku</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@{
+    var refs = ViewBag.References as List<Reference>;
+}
+@if (refs != null && refs.Any())
+{
+    <section class="mt-4">
+        <h3>Referanslarımız</h3>
+        <div class="row g-3">
+            @foreach (var r in refs)
+            {
+                <div class="col-6 col-md-3">
+                    <div class="card h-100">
+                        @if (!string.IsNullOrEmpty(r.ImagePath))
+                        {
+                            <img src="@r.ImagePath" class="card-img-top" alt="@r.Name" />
+                        }
+                        <div class="card-body py-2">
+                            <div class="text-center small">@r.Name</div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+}

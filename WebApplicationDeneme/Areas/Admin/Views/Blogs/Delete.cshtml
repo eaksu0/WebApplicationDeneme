@@ -1,0 +1,25 @@
+﻿@model WebApplicationDeneme.Models.Blog
+@{
+    ViewData["Title"] = "Blog Sil";
+}
+
+<div class="container py-4">
+    <h2>Blog Sil</h2>
+    <p class="text-danger">Bu blogu silmek istediğinize emin misiniz?</p>
+
+    <div class="mb-3">
+        <p><strong>Başlık:</strong> @Model.Title</p>
+        @if (!string.IsNullOrWhiteSpace(Model.ImagePath))
+        {
+            <img src="@Model.ImagePath" style="max-width:240px;height:auto" />
+        }
+    </div>
+
+    <form asp-area="Admin" asp-controller="Blogs" asp-action="Delete" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">Evet, Sil</button>
+        <a class="btn btn-secondary"
+           asp-area="Admin" asp-controller="Blogs" asp-action="Index">İptal</a>
+    </form>
+</div>

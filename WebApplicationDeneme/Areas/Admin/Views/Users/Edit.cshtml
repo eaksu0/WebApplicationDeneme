@@ -1,0 +1,50 @@
+﻿@model WebApplicationDeneme.Models.AppUser
+@{
+    ViewData["Title"] = "Kullanıcı Düzenle";
+}
+
+<h2>Kullanıcı Düzenle</h2>
+
+<form asp-area="Admin" asp-controller="Users" asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label">Ad</label>
+        <input asp-for="Name" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Surname" class="form-label">Soyad</label>
+        <input asp-for="Surname" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label">E-posta</label>
+        <input asp-for="Email" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="PhoneNumber" class="form-label">Telefon</label>
+        <input asp-for="PhoneNumber" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="UserName" class="form-label">Kullanıcı Adı</label>
+        <input asp-for="UserName" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Password" class="form-label">Şifre</label>
+        <input asp-for="Password" type="password" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="RoleId" class="form-label">Rol</label>
+        <select asp-for="RoleId" asp-items="@(ViewBag.RoleList)" class="form-select">
+            <option value="">Seçiniz…</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-success">Kaydet</button>
+    <a asp-area="Admin" asp-controller="Users" asp-action="Index" class="btn btn-secondary">İptal</a>
+</form>

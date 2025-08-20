@@ -1,0 +1,18 @@
+﻿@model WebApplicationDeneme.Models.Reference
+
+<h2>Referans Sil</h2>
+
+<h4>Bu referansı silmek istediğinize emin misiniz?</h4>
+<div>
+    <strong>Ad:</strong> @Model.Name <br />
+    @if (!string.IsNullOrEmpty(Model.ImagePath))
+    {
+        <img src="@Model.ImagePath" width="150" />
+    }
+</div>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Evet, Sil</button>
+    <a asp-action="Index" class="btn btn-secondary">İptal</a>
+</form>

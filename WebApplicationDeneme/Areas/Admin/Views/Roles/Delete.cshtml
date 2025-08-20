@@ -1,0 +1,18 @@
+﻿@model WebApplicationDeneme.Models.Role
+@{
+    ViewData["Title"] = "Rol Sil";
+}
+<h2>Rol Sil</h2>
+
+<p>Bu rolü silmek istediğinize emin misiniz?</p>
+
+<div>
+    <strong>Id:</strong> @Model.Id <br />
+    <strong>Rol Adı:</strong> @Model.Name
+</div>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Evet, Sil</button>
+    <a asp-action="Index" class="btn btn-secondary">İptal</a>
+</form>

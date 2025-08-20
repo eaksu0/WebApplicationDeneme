@@ -1,0 +1,22 @@
+﻿@model WebApplicationDeneme.Models.Role
+@{
+    ViewData["Title"] = "Rol Düzenle";
+}
+<h2>Rol Düzenle</h2>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">@ViewBag.Error</div>
+}
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label>Rol Adı</label>
+        <input asp-for="Name" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-success">Kaydet</button>
+    <a asp-action="Index" class="btn btn-secondary">İptal</a>
+</form>

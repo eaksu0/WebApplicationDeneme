@@ -1,0 +1,41 @@
+﻿@model WebApplicationDeneme.Models.Reference
+@{
+    ViewData["Title"] = "Referans Ekle";
+}
+
+<div class="container py-4">
+    <h2>Referans Ekle</h2>
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger">@ViewBag.Error</div>
+    }
+
+    <form asp-area="Admin"
+          asp-controller="References"
+          asp-action="Create"
+          method="post"
+          enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="mb-3">
+            <label asp-for="Name" class="form-label">Ad</label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Resim</label>
+            <!-- Controller parametresiyle birebir aynı isim: imageFile -->
+            <input type="file"
+                   name="imageFile"
+                   accept=".jpg,.jpeg,.png,.gif,.webp"
+                   class="form-control" />
+        </div>
+
+        <button type="submit" class="btn btn-success">Kaydet</button>
+        <a asp-area="Admin" asp-controller="References" asp-action="Index" class="btn btn-secondary">İptal</a>
+    </form>
+</div>

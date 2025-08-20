@@ -1,0 +1,45 @@
+﻿@model IEnumerable<WebApplicationDeneme.Models.AppUser>
+@{
+    ViewData["Title"] = "Kullanıcılar";
+}
+
+<h2>Kullanıcılar</h2>
+
+<p>
+    <a asp-area="Admin" asp-controller="Users" asp-action="Create" class="btn btn-primary">
+        Yeni Kullanıcı
+    </a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Ad Soyad</th>
+            <th>Kullanıcı Adı</th>
+            <th>E-posta</th>
+            <th>Telefon</th>
+            <th>Rol</th>
+            <th>İşlemler</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var u in Model)
+        {
+            <tr>
+                <td>@u.Id</td>
+                <td>@u.Name @u.Surname</td>
+                <td>@u.UserName</td>
+                <td>@u.Email</td>
+                <td>@u.PhoneNumber</td>
+                <td>@(u.Role?.Name ?? "-")</td>
+                <td>
+                    <a asp-area="Admin" asp-controller="Users" asp-action="Edit" asp-route-id="@u.Id"
+                       class="btn btn-sm btn-warning">Düzenle</a>
+                    <a asp-area="Admin" asp-controller="Users" asp-action="Delete" asp-route-id="@u.Id"
+                       class="btn btn-sm btn-danger">Sil</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
