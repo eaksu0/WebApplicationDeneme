@@ -57,7 +57,7 @@ namespace WebApplicationDeneme.Areas.Admin.Controllers
                 }
 
                 // uploads kökü (Program.cs ile uyumlu)
-                var uploadsRoot = Path.Combine(_env.ContentRootPath, "AppUploads");
+                var uploadsRoot = Path.Combine(_env.WebRootPath, "uploads");
                 Directory.CreateDirectory(uploadsRoot);
 
                 var fileName = Guid.NewGuid() + ext;
@@ -67,6 +67,7 @@ namespace WebApplicationDeneme.Areas.Admin.Controllers
                     await imageFile.CopyToAsync(stream);
 
                 model.ImagePath = "/uploads/" + fileName; // istemci yolu
+
             }
 
             _db.References.Add(model);

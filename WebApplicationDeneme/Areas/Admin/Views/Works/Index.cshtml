@@ -1,0 +1,38 @@
+﻿@model IEnumerable<WebApplicationDeneme.Models.Work>
+@{
+    ViewData["Title"] = "Mevcut Görevler";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Mevcut Görevler</h2>
+        <a class="btn btn-primary" asp-area="Admin" asp-controller="Works" asp-action="Create">+ Görev Ekle</a>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Ad</th>
+                <th>Görev</th>
+                <th>Durum</th>
+                <th>Aciliyet</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var w in Model)
+            {
+                <tr>
+                    <td>@w.Name</td>
+                    <td>@w.Description</td>
+                    <td>@w.Status</td>
+                    <td>@w.Priority</td>
+                    <td>
+                        <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@w.Id">Düzenle</a>
+                        <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@w.Id">Sil</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

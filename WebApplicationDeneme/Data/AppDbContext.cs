@@ -9,8 +9,8 @@ namespace WebApplicationDeneme.Data
 
         public DbSet<Blog> Blogs { get; set; }
         public DbSet<Reference> References { get; set; }
-        public DbSet<WebApplicationDeneme.Models.TeamMember> TeamMembers { get; set; }
-
+        public DbSet<TeamMember> TeamMembers { get; set; }
+        public DbSet<Work> Works { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<AppUser> AppUsers { get; set; }
     }

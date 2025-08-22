@@ -1,0 +1,39 @@
+﻿@model WebApplicationDeneme.Models.Work
+@{
+    ViewData["Title"] = "İş Ekle";
+}
+
+<div class="container py-4">
+    <h2>İş Ekle</h2>
+    <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="mb-3">
+            <label asp-for="Name" class="form-label"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Description" class="form-label"></label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Status" class="form-label">Durum</label>
+            <select asp-for="Status" class="form-select" asp-items="Html.GetEnumSelectList<WebApplicationDeneme.Models.WorkStatus>()"></select>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Priority" class="form-label">Aciliyet</label>
+            <select asp-for="Priority" class="form-select" asp-items="Html.GetEnumSelectList<WebApplicationDeneme.Models.PriorityLevel>()"></select>
+        </div>
+
+        <button type="submit" class="btn btn-success">Kaydet</button>
+        <a asp-action="Index" class="btn btn-secondary">İptal</a>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

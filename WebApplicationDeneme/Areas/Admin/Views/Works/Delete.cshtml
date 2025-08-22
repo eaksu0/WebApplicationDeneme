@@ -1,0 +1,34 @@
+﻿@model WebApplicationDeneme.Models.Work
+@{
+    ViewData["Title"] = "İşi Sil";
+}
+
+<div class="container py-4">
+    <h2>İşi Sil</h2>
+    <p class="text-danger">Bu kaydı silmek istediğinize emin misiniz?</p>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <dl class="row mb-0">
+                <dt class="col-sm-3">Ad</dt>
+                <dd class="col-sm-9">@Model.Name</dd>
+
+                <dt class="col-sm-3">Açıklama</dt>
+                <dd class="col-sm-9">@Model.Description</dd>
+
+                <dt class="col-sm-3">Durum</dt>
+                <dd class="col-sm-9">@Model.Status</dd>
+
+                <dt class="col-sm-3">Aciliyet</dt>
+                <dd class="col-sm-9">@Model.Priority</dd>
+            </dl>
+        </div>
+    </div>
+
+    <form asp-area="Admin" asp-controller="Works" asp-action="Delete" method="post" class="d-inline">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">Evet, Sil</button>
+    </form>
+    <a asp-area="Admin" asp-controller="Works" asp-action="Index" class="btn btn-secondary">İptal</a>
+</div>
