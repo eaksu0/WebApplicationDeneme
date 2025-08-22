@@ -1,4 +1,5 @@
 ﻿@model WebApplicationDeneme.Models.AppUser
+
 @{
     ViewData["Title"] = "Kullanıcı Sil";
 }
@@ -7,6 +8,9 @@
 
 <h4>Bu kullanıcıyı silmek istediğinize emin misiniz?</h4>
 
+<!-- Genel hata/geri bildirimler için -->
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
 <div class="mb-3">
     <p><strong>Ad Soyad:</strong> @Model.Name @Model.Surname</p>
     <p><strong>Kullanıcı Adı:</strong> @Model.UserName</p>
@@ -14,8 +18,23 @@
     <p><strong>Rol:</strong> @(Model.Role?.Name ?? "-")</p>
 </div>
 
-<form asp-area="Admin" asp-controller="Users" asp-action="Delete" method="post">
+<form asp-area="Admin" asp-controller="Users" asp-action="Delete" method="post" id="deleteForm">
+    @Html.AntiForgeryToken()
     <input type="hidden" asp-for="Id" />
-    <button type="submit" class="btn btn-danger">Evet, Sil</button>
+    <button type="submit" class="btn btn-danger" id="btnDelete">Evet, Sil</button>
     <a asp-area="Admin" asp-controller="Users" asp-action="Index" class="btn btn-secondary">İptal</a>
 </form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Çift tıklamayla iki kez silme isteğini engelle
+        document.getElementById('deleteForm')?.addEventListener('submit', function () {
+            const btn = document.getElementById('btnDelete');
+            if (btn) {
+                btn.disabled = true;
+                btn.innerText = 'Siliniyor...';
+            }
+        });
+    </script>
+}

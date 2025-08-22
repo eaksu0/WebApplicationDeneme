@@ -5,37 +5,48 @@
 
 <h2>Kullanıcı Düzenle</h2>
 
-<form asp-area="Admin" asp-controller="Users" asp-action="Edit" method="post">
+<form asp-area="Admin" asp-controller="Users" asp-action="Edit" method="post" id="editForm">
+    @Html.AntiForgeryToken()
     <input type="hidden" asp-for="Id" />
+
+    <!-- Genel model hataları -->
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
     <div class="mb-3">
         <label asp-for="Name" class="form-label">Ad</label>
         <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
         <label asp-for="Surname" class="form-label">Soyad</label>
         <input asp-for="Surname" class="form-control" />
+        <span asp-validation-for="Surname" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
         <label asp-for="Email" class="form-label">E-posta</label>
         <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
         <label asp-for="PhoneNumber" class="form-label">Telefon</label>
         <input asp-for="PhoneNumber" class="form-control" />
+        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
         <label asp-for="UserName" class="form-label">Kullanıcı Adı</label>
         <input asp-for="UserName" class="form-control" />
+        <span asp-validation-for="UserName" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
         <label asp-for="Password" class="form-label">Şifre</label>
-        <input asp-for="Password" type="password" class="form-control" />
+        <input asp-for="Password" type="password" class="form-control" placeholder="(Boş bırakılırsa değişmez)" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+        <small class="text-muted">Şifreyi değiştirmek istemiyorsan boş bırak.</small>
     </div>
 
     <div class="mb-3">
@@ -43,8 +54,23 @@
         <select asp-for="RoleId" asp-items="@(ViewBag.RoleList)" class="form-select">
             <option value="">Seçiniz…</option>
         </select>
+        <span asp-validation-for="RoleId" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-success">Kaydet</button>
+    <button type="submit" class="btn btn-success" id="btnSave">Kaydet</button>
     <a asp-area="Admin" asp-controller="Users" asp-action="Index" class="btn btn-secondary">İptal</a>
 </form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Çift tıklamayla birden fazla POST'u engelle
+        document.getElementById('editForm')?.addEventListener('submit', function () {
+            const btn = document.getElementById('btnSave');
+            if (btn) {
+                btn.disabled = true;
+                btn.innerText = 'Kaydediliyor...';
+            }
+        });
+    </script>
+}
