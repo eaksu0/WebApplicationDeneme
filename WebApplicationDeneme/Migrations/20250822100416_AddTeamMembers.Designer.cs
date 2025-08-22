@@ -11,8 +11,8 @@ using WebApplicationDeneme.Data;
 namespace WebApplicationDeneme.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250820073444_AddReferences")]
-    partial class AddReferences
+    [Migration("20250822100416_AddTeamMembers")]
+    partial class AddTeamMembers
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -92,6 +92,27 @@ namespace WebApplicationDeneme.Migrations
                     b.ToTable("Blogs");
                 });
 
+            modelBuilder.Entity("WebApplicationDeneme.Models.Reference", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ImagePath")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("References");
+                });
+
             modelBuilder.Entity("WebApplicationDeneme.Models.Role", b =>
                 {
                     b.Property<int>("Id")
@@ -104,6 +125,39 @@ namespace WebApplicationDeneme.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
+                });
+
+            modelBuilder.Entity("WebApplicationDeneme.Models.TeamMember", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("DisplayOrder")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PhotoPath")
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Surname")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TeamMembers");
                 });
 
             modelBuilder.Entity("WebApplicationDeneme.Models.AppUser", b =>

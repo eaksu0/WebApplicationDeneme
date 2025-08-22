@@ -1,0 +1,31 @@
+﻿@model IEnumerable<WebApplicationDeneme.Models.TeamMember>
+@{
+    ViewData["Title"] = "Hakkımızda";
+}
+<div class="container py-5">
+    <h1 class="mb-4">Hakkımızda</h1>
+
+    <section class="mb-5">
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum ex eaque ipsa temporibus a? Ex blanditiis nesciunt, eos enim rem sequi aliquid tenetur nihil! Tempora culpa ducimus reprehenderit? Non, repellendus obcaecati? Officiis similique dicta mollitia magnam quo? Vero, officia dolor nihil, provident obcaecati asperiores illo delectus dignissimos perspiciatis voluptates nesciunt accusantium reiciendis blanditiis, architecto commodi et? In hic quisquam debitis pariatur impedit iure facilis! Quidem facilis doloremque labore sint assumenda, nam, doloribus qui libero tempora explicabo sunt dolorum veniam maxime, earum harum molestiae nihil. Veritatis iusto harum odit repellendus eligendi doloribus mollitia corporis doloremque asperiores rem sed pariatur facilis, temporibus unde ex exercitationem cupiditate eveniet? Maxime consectetur, non perferendis a exercitationem numquam commodi harum, saepe molestiae esse suscipit cumque libero ab repellat mollitia veritatis dolorem quia? Cumque necessitatibus dicta perferendis ducimus, doloremque a, maxime nulla fugit quidem reprehenderit minima, voluptatum voluptas eos. Ipsum cum dicta aliquam minus at cupiditate vitae quae eaque, repellendus nobis nihil doloremque dolore beatae id perspiciatis voluptatibus recusandae aperiam modi tempora. Molestias, voluptate cupiditate, doloremque provident saepe accusamus rem, expedita nemo natus labore quis laboriosam esse error. Porro rerum officiis optio! Rerum libero maiores ad assumenda, praesentium esse excepturi quam laudantium at. Beatae, nisi explicabo. Culpa!</p>
+    </section>
+
+    <h3 class="mb-3">Ekibimiz</h3>
+    <div class="row g-4">
+        @foreach (var m in Model)
+        {
+            <div class="col-6 col-md-4 col-lg-3">
+                <div class="card h-100 text-center">
+                    @if (!string.IsNullOrWhiteSpace(m.PhotoPath))
+                    {
+                        <img src="@Url.Content(m.PhotoPath)" class="card-img-top"
+                             style="aspect-ratio:1;object-fit:cover;" />
+                    }
+                    <div class="card-body">
+                        <div class="fw-semibold">@m.Name @m.Surname</div>
+                        <div class="text-muted small">@m.Title</div>
+                    </div>
+                </div>  <link href="#" rel="stylesheet" />
+            </div>
+        }
+    </div>
+</div>

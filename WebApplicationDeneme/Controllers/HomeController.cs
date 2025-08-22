@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApplicationDeneme.Data;
@@ -39,6 +40,15 @@ namespace WebApplicationDeneme.Controllers
                                        .ToListAsync();
 
             return View(blogs); // mevcut modelin blog listesi kalabilir
+        }
+        [AllowAnonymous]
+        public async Task<IActionResult> About()
+        {
+            var team = await _db.TeamMembers
+                                .AsNoTracking()
+                                .OrderBy(t => t.DisplayOrder)
+                                .ToListAsync();
+            return View(team);
         }
     }
 }

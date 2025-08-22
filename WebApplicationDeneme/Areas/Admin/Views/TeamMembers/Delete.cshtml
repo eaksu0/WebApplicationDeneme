@@ -1,0 +1,22 @@
+﻿@model WebApplicationDeneme.Models.TeamMember
+@{
+    ViewData["Title"] = "Üye Sil";
+}
+
+<div class="container py-4">
+    <h2>Üye Sil</h2>
+    <p class="text-danger">Bu üyeyi silmek istediğinize emin misiniz?</p>
+
+    <p><strong>@Model.Name @Model.Surname</strong> — @Model.Title</p>
+    @if (!string.IsNullOrWhiteSpace(Model.PhotoPath))
+    {
+        <img src="@Url.Content(Model.PhotoPath)" style="max-width:200px; height:auto;" />
+    }
+
+    <form asp-area="Admin" asp-controller="TeamMembers" asp-action="Delete" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">Evet, Sil</button>
+        <a asp-area="Admin" asp-controller="TeamMembers" asp-action="Index" class="btn btn-secondary">İptal</a>
+    </form>
+</div>

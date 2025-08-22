@@ -1,0 +1,33 @@
+﻿@model IEnumerable<WebApplicationDeneme.Models.TeamMember>
+@{
+    ViewData["Title"] = "Ekip Üyeleri";
+}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">Ekip Üyeleri</h2>
+        <a class="btn btn-primary" asp-area="Admin" asp-controller="TeamMembers" asp-action="Create">+ Üye Ekle</a>
+    </div>
+
+    <table class="table table-hover">
+        <thead><tr><th>#</th><th>Foto</th><th>Ad Soyad</th><th>Ünvan</th><th>Sıra</th><th></th></tr></thead>
+        <tbody>
+            @foreach (var m in Model)
+            {
+                <tr>
+                    <td>@m.Id</td>
+                    <td>@if (!string.IsNullOrWhiteSpace(m.PhotoPath))
+                        {
+                            <img src="@Url.Content(m.PhotoPath)" style="height:56px" />
+                        }</td>
+                    <td>@m.Name @m.Surname</td>
+                    <td>@m.Title</td>
+                    <td>@m.DisplayOrder</td>
+                    <td class="text-nowrap">
+                        <a class="btn btn-sm btn-warning" asp-area="Admin" asp-controller="TeamMembers" asp-action="Edit" asp-route-id="@m.Id">Düzenle</a>
+                        <a class="btn btn-sm btn-danger" asp-area="Admin" asp-controller="TeamMembers" asp-action="Delete" asp-route-id="@m.Id">Sil</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
