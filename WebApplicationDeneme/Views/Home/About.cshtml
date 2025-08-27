@@ -2,30 +2,239 @@
 @{
     ViewData["Title"] = "Hakkımızda";
 }
-<div class="container py-5">
-    <h1 class="mb-4">Hakkımızda</h1>
 
-    <section class="mb-5">
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum ex eaque ipsa temporibus a? Ex blanditiis nesciunt, eos enim rem sequi aliquid tenetur nihil! Tempora culpa ducimus reprehenderit? Non, repellendus obcaecati? Officiis similique dicta mollitia magnam quo? Vero, officia dolor nihil, provident obcaecati asperiores illo delectus dignissimos perspiciatis voluptates nesciunt accusantium reiciendis blanditiis, architecto commodi et? In hic quisquam debitis pariatur impedit iure facilis! Quidem facilis doloremque labore sint assumenda, nam, doloribus qui libero tempora explicabo sunt dolorum veniam maxime, earum harum molestiae nihil. Veritatis iusto harum odit repellendus eligendi doloribus mollitia corporis doloremque asperiores rem sed pariatur facilis, temporibus unde ex exercitationem cupiditate eveniet? Maxime consectetur, non perferendis a exercitationem numquam commodi harum, saepe molestiae esse suscipit cumque libero ab repellat mollitia veritatis dolorem quia? Cumque necessitatibus dicta perferendis ducimus, doloremque a, maxime nulla fugit quidem reprehenderit minima, voluptatum voluptas eos. Ipsum cum dicta aliquam minus at cupiditate vitae quae eaque, repellendus nobis nihil doloremque dolore beatae id perspiciatis voluptatibus recusandae aperiam modi tempora. Molestias, voluptate cupiditate, doloremque provident saepe accusamus rem, expedita nemo natus labore quis laboriosam esse error. Porro rerum officiis optio! Rerum libero maiores ad assumenda, praesentium esse excepturi quam laudantium at. Beatae, nisi explicabo. Culpa!</p>
+<!-- İsteğe göre: sayfaya özel hafif stil -->
+<style>
+    .about-hero {
+        background: linear-gradient(135deg, #13547a, #80d0c7);
+        color: #fff;
+        border-radius: 1.25rem;
+        overflow: hidden;
+    }
+
+        .about-hero .overlay {
+            background: rgba(0,0,0,.25);
+            position: absolute;
+            inset: 0;
+        }
+
+    .section-title {
+        max-width: 760px;
+        margin: 0 auto 2rem auto;
+        text-align: center;
+    }
+
+    .feature-icon {
+        width: 48px;
+        height: 48px;
+        display: inline-grid;
+        place-items: center;
+        border-radius: 12px;
+        background: #f1f5f9;
+    }
+
+    .team-card {
+        transition: transform .25s, box-shadow .25s;
+    }
+
+        .team-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 24px rgba(0,0,0,.08);
+        }
+
+    .avatar {
+        aspect-ratio: 1/1;
+        object-fit: cover;
+        width: 100%;
+        border-top-left-radius: .75rem;
+        border-top-right-radius: .75rem;
+    }
+
+    .stat-badge {
+        background: #0ea5e9;
+        color: #fff;
+        border-radius: 999px;
+        padding: .5rem .875rem;
+        font-weight: 600;
+    }
+
+    .timeline::before {
+        content: "";
+        position: absolute;
+        left: 20px;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: #e5e7eb;
+    }
+
+    .timeline-item {
+        position: relative;
+        padding-left: 56px;
+    }
+
+    .timeline-dot {
+        position: absolute;
+        left: 12px;
+        width: 16px;
+        height: 16px;
+        background: #0ea5e9;
+        border-radius: 50%;
+        top: .4rem;
+        box-shadow: 0 0 0 4px #e6f6fd;
+    }
+</style>
+
+<div class="container py-5">
+
+    <!-- HERO / Üst Bant -->
+    <section class="about-hero position-relative p-4 p-md-5 mb-5">
+        <img src="~/assets/img/about.jpg" alt="" class="w-100 d-none d-md-block" style="object-fit: cover; height: 260px; opacity:.25; border-radius: .75rem;">
+        <div class="overlay d-none d-md-block"></div>
+
+        <div class="row align-items-center position-relative">
+            <div class="col-lg-7">
+                <h1 class="display-5 fw-bold mb-3">Biz kimiz?</h1>
+                <p class="lead mb-4">
+                    Şeffaf, güvenli ve kullanıcı odaklı çözümler üreten bir ekibiz. Kentleşme, veri, yazılım ve tasarımı
+                    aynı potada buluşturuyor; ölçeklenebilir uygulamalar geliştiriyoruz.
+                </p>
+                <div class="d-flex gap-2 flex-wrap">
+                    <span class="stat-badge">10+ yıl deneyim</span>
+                    <span class="stat-badge">50+ tamamlanan proje</span>
+                    <span class="stat-badge">%99 müşteri memnuniyeti</span>
+                </div>
+            </div>
+            <div class="col-lg-5 mt-4 mt-lg-0">
+                <div class="bg-white text-dark rounded-4 p-4 shadow-sm" style=" border-radius: 10px;">
+                    <h5 class="fw-semibold mb-3">Misyon & Vizyon</h5>
+                    <p class="mb-2"><strong>Misyon:</strong> Kurum ve bireylere karar destek sağlayan, modern ve güvenli dijital ürünler geliştirmek.</p>
+                    <p class="mb-0"><strong>Vizyon:</strong> Bölgesinde referans alınan, küresel ölçekte değer üreten teknoloji ekibi olmak.</p>
+                </div>
+            </div>
+        </div>
     </section>
 
-    <h3 class="mb-3">Ekibimiz</h3>
-    <div class="row g-4">
-        @foreach (var m in Model)
-        {
-            <div class="col-6 col-md-4 col-lg-3">
-                <div class="card h-100 text-center">
-                    @if (!string.IsNullOrWhiteSpace(m.PhotoPath))
-                    {
-                        <img src="@Url.Content(m.PhotoPath)" class="card-img-top"
-                             style="aspect-ratio:1;object-fit:cover;" />
-                    }
-                    <div class="card-body">
-                        <div class="fw-semibold">@m.Name @m.Surname</div>
-                        <div class="text-muted small">@m.Title</div>
-                    </div>
-                </div>  <link href="#" rel="stylesheet" />
+    <!-- Özellikler / Neden Biz -->
+    <section class="mb-5">
+        <div class="section-title">
+            <h2 class="h1 fw-bold">Neden Biz?</h2>
+            <p class="text-muted">İhtiyaca göre özelleştirilebilen, sürdürülebilir ve güvenli çözümler.</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="p-4 bg-white rounded-4 shadow-sm h-100">
+                    <div class="feature-icon mb-3"><i class="bi bi-shield-check fs-4"></i></div>
+                    <h5 class="fw-semibold">Güvenlik Öncelikli</h5>
+                    <p class="text-muted mb-0">OWASP prensipleri ve sıkı kod incelemeleri ile riskleri minimize ediyoruz.</p>
+                </div>
             </div>
-        }
-    </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="p-4 bg-white rounded-4 shadow-sm h-100">
+                    <div class="feature-icon mb-3"><i class="bi bi-speedometer2 fs-4"></i></div>
+                    <h5 class="fw-semibold">Yüksek Performans</h5>
+                    <p class="text-muted mb-0">Ölçeklenebilir mimari ve optimize sorgular ile hızlı deneyim.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="p-4 bg-white rounded-4 shadow-sm h-100">
+                    <div class="feature-icon mb-3"><i class="bi bi-brush fs-4"></i></div>
+                    <h5 class="fw-semibold">Şık Tasarım</h5>
+                    <p class="text-muted mb-0">Modern UI/UX, mobil öncelikli ve erişilebilir arayüzler.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="p-4 bg-white rounded-4 shadow-sm h-100">
+                    <div class="feature-icon mb-3"><i class="bi bi-people fs-4"></i></div>
+                    <h5 class="fw-semibold">Yakın İşbirliği</h5>
+                    <p class="text-muted mb-0">Sürekli iletişim, şeffaf iş planı ve iteratif geliştirme.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hikayemiz / Zaman Çizelgesi -->
+    <section class="mb-5">
+        <div class="section-title">
+            <h2 class="h1 fw-bold">Hikayemiz</h2>
+            <p class="text-muted">Kısa bir zaman çizelgesi ile yolculuğumuz.</p>
+        </div>
+
+        <div class="position-relative timeline">
+            <div class="row g-4">
+                <div class="col-12 timeline-item">
+                    <span class="timeline-dot"></span>
+                    <h5 class="fw-semibold mb-1">Kuruluş</h5>
+                    <p class="text-muted mb-0">Temellerimizi attık ve ilk çekirdek ürünü yayınladık.</p>
+                </div>
+                <div class="col-12 timeline-item">
+                    <span class="timeline-dot"></span>
+                    <h5 class="fw-semibold mb-1">Büyüme</h5>
+                    <p class="text-muted mb-0">Yeni eklemelerle ekip büyüdü, kurumsal projelere başladık.</p>
+                </div>
+                <div class="col-12 timeline-item">
+                    <span class="timeline-dot"></span>
+                    <h5 class="fw-semibold mb-1">Uluslararası İşbirlikleri</h5>
+                    <p class="text-muted mb-0">Farklı pazarlarda çözüm ortaklarıyla ürünlerimizi yaygınlaştırdık.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ekibimiz (Dinamik) -->
+    <section class="mb-5">
+        <div class="section-title">
+            <h2 class="h1 fw-bold">Ekibimiz</h2>
+            <p class="text-muted">Uzman, disiplinli ve üretken bir kadro.</p>
+        </div>
+
+        <div class="row g-4">
+            @foreach (var m in Model)
+            {
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="card team-card h-100 border-0 shadow-sm rounded-4">
+                        @if (!string.IsNullOrWhiteSpace(m.PhotoPath))
+                        {
+                            <img src="@Url.Content(m.PhotoPath)" alt="@($"{m.Name} {m.Surname}")" class="avatar" />
+                        }
+                        else
+                        {
+                            <img src="~/assets/img/team/default.jpg" alt="Team member" class="avatar" />
+                        }
+                        <div class="card-body text-center">
+                            <h6 class="fw-semibold mb-1">@m.Name @m.Surname</h6>
+                            <div class="text-muted small">@m.Title</div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+
+    <!-- Referanslar / Logolar -->
+    <section class="mb-5">
+        <div class="section-title">
+            <h2 class="h1 fw-bold">Birlikte Çalıştıklarımız</h2>
+            <p class="text-muted">Güven veren iş ortakları.</p>
+        </div>
+
+        <div class="row g-4 align-items-center text-center">
+            <div class="col-6 col-md-3"><img src="~/assets/img/brands/brand-1.svg" class="img-fluid opacity-75" alt=""></div>
+            <div class="col-6 col-md-3"><img src="~/assets/img/brands/brand-2.svg" class="img-fluid opacity-75" alt=""></div>
+            <div class="col-6 col-md-3"><img src="~/assets/img/brands/brand-3.svg" class="img-fluid opacity-75" alt=""></div>
+            <div class="col-6 col-md-3"><img src="~/assets/img/brands/brand-4.svg" class="img-fluid opacity-75" alt=""></div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="mb-2">
+        <div class="p-4 p-md-5 bg-dark text-white rounded-4 d-flex flex-column flex-lg-row align-items-center justify-content-between">
+            <div class="mb-3 mb-lg-0">
+                <h3 class="fw-bold mb-1">Birlikte üretmeye hazır mısınız?</h3>
+                <p class="mb-0 text-white-50">İhtiyacınıza özel bir demo veya keşif toplantısı planlayalım.</p>
+            </div>
+            <a class="btn btn-light btn-lg fw-semibold rounded-pill px-4" href="/Contact">İletişime Geç</a>
+        </div>
+    </section>
 </div>

@@ -20,3 +20,52 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/* KMAB Navbar */
+.navbar-kmab {
+    background: linear-gradient(135deg, #13547a, #80d0c7);
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+}
+
+    .navbar-kmab .brand-text {
+        letter-spacing: .5px;
+    }
+
+    /* link hover/active underline */
+    .navbar-kmab .nav-link {
+        position: relative;
+        color: rgba(255,255,255,.9);
+    }
+
+        .navbar-kmab .nav-link:hover {
+            color: #fff;
+        }
+
+        .navbar-kmab .nav-link::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -6px;
+            height: 2px;
+            background: rgba(255,255,255,.75);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform .25s ease;
+        }
+
+        .navbar-kmab .nav-link:hover::after,
+        .navbar-kmab .nav-link.active::after {
+            transform: scaleX(1);
+        }
+
+/* offcanvas dark fix */
+.offcanvas.bg-dark .nav-link {
+    color: #e5e7eb;
+}
+
+    .offcanvas.bg-dark .nav-link.active {
+        color: #fff;
+        font-weight: 600;
+    }

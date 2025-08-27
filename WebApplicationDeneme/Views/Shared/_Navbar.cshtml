@@ -1,0 +1,88 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    // Aktif sayfa helper
+    Func<string?, string?, string?> isActive = (ctrl, act) =>
+    {
+        var c = (string?)ViewContext.RouteData.Values["controller"];
+        var a = (string?)ViewContext.RouteData.Values["action"];
+        var ok = (ctrl is null || string.Equals(c, ctrl, StringComparison.OrdinalIgnoreCase))
+              && (act is null || string.Equals(a, act, StringComparison.OrdinalIgnoreCase));
+        return ok ? "active" : null;
+    };
+}
+
+<header class="sticky-top">
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-kmab shadow-sm">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" asp-area="" asp-controller="Home" asp-action="Index">
+                <img src="~/assets/img/logo.png" alt="K-MAB Logo" height="32" class="d-inline-block align-text-top" />
+            </a>
+
+            <!-- Mobil buton -->
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#kmabOffcanvas" aria-controls="kmabOffcanvas" aria-label="Menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Desktop menü -->
+            <div class="collapse navbar-collapse d-none d-lg-flex" id="siteNavbar">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link @isActive("Home", "Index")" asp-controller="Home" asp-action="Index">Ana Sayfa</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @isActive("Home", "About")" asp-controller="Home" asp-action="About">Hakkımızda</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @isActive("Blogs", "Index")" asp-controller="Blogs" asp-action="Index">Blog</a>
+                    </li>
+                   
+                </ul>
+
+                <!-- Sağ taraf: sadece giriş yapmışsa "Çıkış" göster -->
+                <div class="d-flex align-items-center gap-2">
+                    @if (User?.Identity?.IsAuthenticated ?? false)
+                    {
+                        <span class="navbar-text text-white-50 d-none d-xl-inline">Merhaba, <strong>@User.Identity!.Name</strong></span>
+                        <form asp-controller="Account" asp-action="Logout" method="post" class="m-0">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-light btn-sm rounded-pill">Çıkış</button>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobil offcanvas menü -->
+    <div class="offcanvas offcanvas-end bg-dark text-white" tabindex="-1" id="kmabOffcanvas" aria-labelledby="kmabOffcanvasLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="kmabOffcanvasLabel">Menü</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Kapat"></button>
+        </div>
+        <div class="offcanvas-body d-lg-none">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link @isActive("Home", "Index")" data-bs-dismiss="offcanvas" asp-controller="Home" asp-action="Index">Ana Sayfa</a></li>
+                <li class="nav-item"><a class="nav-link @isActive("Home", "About")" data-bs-dismiss="offcanvas" asp-controller="Home" asp-action="About">Hakkımızda</a></li>
+                <li class="nav-item"><a class="nav-link @isActive("Blogs", "Index")" data-bs-dismiss="offcanvas" asp-controller="Blogs" asp-action="Index">Blog</a></li>
+                <li class="nav-item">
+                    <a class="nav-link @isActive("Users", "Index")" data-bs-dismiss="offcanvas" asp-area="Admin" asp-controller="Users" asp-action="Index">
+                        <i class="bi bi-shield-lock"></i> Admin Paneli
+                    </a>
+                </li>
+            </ul>
+
+            <hr class="border-secondary">
+
+            <!-- Mobilde de sadece giriş yapmışsa çıkış göster -->
+            @if (User?.Identity?.IsAuthenticated ?? false)
+            {
+                <div class="d-grid">
+                    <form asp-controller="Account" asp-action="Logout" method="post" class="m-0">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-light rounded-pill">Çıkış</button>
+                    </form>
+                </div>
+            }
+        </div>
+    </div>
+</header>
