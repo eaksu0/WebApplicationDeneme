@@ -1,10 +1,16 @@
 ﻿@using WebApplicationDeneme.Models
 @model IEnumerable<WebApplicationDeneme.Models.Blog>
+
 @{
     ViewData["Title"] = "Home";
-    // Slider beklenen tip: ImagePath, Heading, Text, LinkText, LinkUrl
-    var sliders = ViewBag.Sliders as IEnumerable<dynamic>; // yoksa default tek slide gösterilecek
+
+    // ViewBag üzerinden slider ve referanslar
+    var sliders = ViewBag.Sliders as IEnumerable<dynamic>; // Tipli VM'e geçmek istersen haber ver
     var refs = ViewBag.References as List<Reference>;
+
+    // Küçük yardımcılar
+    string SafeText(object? x, string fallback) => x is string s && !string.IsNullOrWhiteSpace(s) ? s : fallback;
+    string SafeUrl(object? x, string fallback) => Url.Content(SafeText(x, fallback));
 }
 
 <style>
@@ -58,22 +64,28 @@
 <div class="container py-4">
 
     <!-- HERO SLIDER -->
-    <div id="homeHero" class="carousel slide hero mb-5" data-bs-ride="carousel">
+    <div id="homeHero" class="carousel slide hero mb-5" data-bs-ride="carousel" data-bs-interval="6000" data-bs-pause="hover">
         <div class="carousel-indicators">
             @{
-                int idx = 0;
-                if (sliders != null && sliders.Any())
+                var hasSlides = sliders != null && sliders.Any();
+                if (hasSlides)
                 {
-                    foreach (var _ in sliders)
+                    var i = 0;
+                    foreach (var _ in sliders!)
                     {
-                        <button type="button" data-bs-target="#homeHero" data-bs-slide-to="@idx" class="@(idx == 0 ? "active" : "")" aria-current="@(idx == 0 ? "true" : "false")"></button>
+                        <button type="button"
+                                data-bs-target="#homeHero"
+                                data-bs-slide-to="@i"
+                                class="@(i == 0 ? "active" : null)"
+                                aria-current="@(i == 0 ? "true" : null)"
+                                aria-label="Slide @(i + 1)"></button>
                         ;
-                        idx++;
+                        i++;
                     }
                 }
                 else
                 {
-                    <button type="button" data-bs-target="#homeHero" data-bs-slide-to="0" class="active" aria-current="true"></button>
+                    <button type="button" data-bs-target="#homeHero" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
                 }
             }
         </div>
@@ -84,16 +96,21 @@
                 var first = true;
                 foreach (var s in sliders)
                 {
+                    var img = SafeUrl(s?.ImagePath, "~/assets/img/hero-default.jpg");
+                    var head = SafeText(s?.Heading, "Güçlü, Modern, Güvenli");
+                    var text = SafeText(s?.Text, "İhtiyaca göre özelleştirilen yazılım ve veri çözümleri.");
+                    var ltxt = SafeText(s?.LinkText, "İletişime Geç");
+                    var lurl = (s?.LinkUrl as string) ?? "";
+
                     <div class="carousel-item @(first ? "active" : "")">
-                        <img src="@Url.Content((string)s.ImagePath ?? "~/assets/img/hero-default.jpg")" alt="">
+                        <img src="@img" alt="@head" loading="eager">
                         <div class="container h-100 d-flex align-items-center">
                             <div class="caption">
-                                <h1 class="display-5 fw-bold mb-3">@((string?)s.Heading ?? "Güçlü, Modern, Güvenli")</h1>
-                                <p class="lead mb-4" style="max-width: 720px;">@((string?)s.Text ?? "İhtiyaca göre özelleştirilen yazılım ve veri çözümleri.")</p>
-                                @if (!string.IsNullOrWhiteSpace((string?)s.LinkUrl))
+                                <h1 class="display-5 fw-bold mb-3">@head</h1>
+                                <p class="lead mb-4" style="max-width: 720px;">@text</p>
+                                @if (!string.IsNullOrWhiteSpace(lurl))
                                 {
-                                    <a class="btn btn-light btn-lg rounded-pill px-4"
-                                       href="@((string)s.LinkUrl)">@((string?)s.LinkText ?? "İletişime Geç")</a>
+                                    <a class="btn btn-light btn-lg rounded-pill px-4" href="@lurl">@ltxt</a>
                                 }
                             </div>
                         </div>
@@ -105,13 +122,11 @@
             {
                 <!-- Slider verisi yoksa: varsayılan tek slide -->
                 <div class="carousel-item active">
-                    <img src="~/assets/img/hero-default.jpg" alt="">
+                    <img src="~/assets/img/hero-default.jpg" alt="TEST APPLICATION" loading="eager">
                     <div class="container h-100 d-flex align-items-center">
                         <div class="caption">
                             <h1 class="display-5 fw-bold mb-3">TEST APPLICATION</h1>
-                            <p class="lead mb-4" style="max-width: 720px;">
-                                Şeffaf, güvenli ve kullanıcı odaklı çözümler.
-                            </p>
+                            <p class="lead mb-4" style="max-width: 720px;">Şeffaf, güvenli ve kullanıcı odaklı çözümler.</p>
                             <a class="btn btn-light btn-lg rounded-pill px-4" href="/About">Hakkımızda</a>
                         </div>
                     </div>
@@ -120,11 +135,11 @@
         </div>
 
         <button class="carousel-control-prev" type="button" data-bs-target="#homeHero" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon"></span>
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Önceki</span>
         </button>
         <button class="carousel-control-next" type="button" data-bs-target="#homeHero" data-bs-slide="next">
-            <span class="carousel-control-next-icon"></span>
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Sonraki</span>
         </button>
     </div>
@@ -139,17 +154,15 @@
         <div class="row g-4">
             @foreach (var blog in (Model ?? Enumerable.Empty<Blog>()).Take(3))
             {
+                var blogImg = string.IsNullOrWhiteSpace(blog.ImagePath) ? "~/assets/img/blog-default.jpg" : blog.ImagePath;
+
                 <div class="col-md-4">
                     <div class="card blog-card h-100 border-0 shadow-sm">
-                        @if (!string.IsNullOrEmpty(blog.ImagePath))
-                        {
-                            <img src="@Url.Content(blog.ImagePath)" class="card-img-top" alt="@blog.Title" />
-                        }
+                        <img src="@Url.Content(blogImg)" class="card-img-top" alt="@blog.Title" loading="lazy" />
                         <div class="card-body">
                             <h5 class="card-title">@blog.Title</h5>
                             <p class="card-text text-muted">@blog.ShortText</p>
-                            <a asp-controller="Blogs" asp-action="Details" asp-route-id="@blog.Id"
-                               class="btn btn-primary">Devamını Oku</a>
+                            <a asp-controller="Blogs" asp-action="Details" asp-route-id="@blog.Id" class="btn btn-primary">Devamını Oku</a>
                         </div>
                     </div>
                 </div>
@@ -165,12 +178,11 @@
             <div class="row g-3 align-items-center">
                 @foreach (var r in refs)
                 {
+                    var rimg = string.IsNullOrWhiteSpace(r.ImagePath) ? "~/assets/img/brands/brand-1.svg" : r.ImagePath;
+
                     <div class="col-6 col-sm-4 col-md-3 col-lg-2 text-center">
                         <div class="card h-100 border-0">
-                            @if (!string.IsNullOrEmpty(r.ImagePath))
-                            {
-                                <img src="@Url.Content(r.ImagePath)" class="img-fluid brand-logo" alt="@r.Name" />
-                            }
+                            <img src="@Url.Content(rimg)" class="img-fluid brand-logo" alt="@r.Name" loading="lazy" />
                             <div class="card-body py-2">
                                 <div class="small text-muted">@r.Name</div>
                             </div>

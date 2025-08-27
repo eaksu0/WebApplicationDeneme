@@ -13,5 +13,7 @@ namespace WebApplicationDeneme.Data
         public DbSet<Work> Works { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<AppUser> AppUsers { get; set; }
+        public DbSet<Slider> Sliders { get; set; }
+
     }
 }

@@ -1,0 +1,55 @@
+﻿@model WebApplicationDeneme.Models.Slider
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Yeni Slider";
+}
+<h2>Yeni Slider</h2>
+<form asp-action="Create" method="post" enctype="multipart/form-data" class="row g-3">
+    @Html.AntiForgeryToken()
+
+    <div class="col-md-6">
+        <label asp-for="Heading" class="form-label"></label>
+        <input asp-for="Heading" class="form-control" />
+        <span asp-validation-for="Heading" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-6">
+        <label asp-for="Text" class="form-label"></label>
+        <input asp-for="Text" class="form-control" />
+        <span asp-validation-for="Text" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-4">
+        <label asp-for="LinkText" class="form-label"></label>
+        <input asp-for="LinkText" class="form-control" />
+    </div>
+    <div class="col-md-8">
+        <label asp-for="LinkUrl" class="form-label"></label>
+        <input asp-for="LinkUrl" class="form-control" placeholder="/Contact veya https://..." />
+        <span asp-validation-for="LinkUrl" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Görsel</label>
+        <input type="file" name="image" class="form-control" accept="image/*" />
+    </div>
+
+    <div class="col-md-4">
+        <label asp-for="SortOrder" class="form-label"></label>
+        <input asp-for="SortOrder" class="form-control" />
+    </div>
+
+    <div class="col-md-4 form-check mt-4">
+        <input asp-for="IsActive" class="form-check-input" />
+        <label asp-for="IsActive" class="form-check-label"></label>
+    </div>
+
+    <div class="col-12">
+        <button class="btn btn-primary">Kaydet</button>
+        <a asp-action="Index" class="btn btn-outline-secondary">Geri</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

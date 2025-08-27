@@ -1,0 +1,57 @@
+﻿@model IEnumerable<WebApplicationDeneme.Models.Slider>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Slider Yönetimi";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Slider Yönetimi</h2>
+    <a asp-action="Create" class="btn btn-primary">Yeni Ekle</a>
+</div>
+
+<table class="table table-striped align-middle">
+    <thead>
+        <tr>
+            <th>Sıra</th>
+            <th>Görsel</th>
+            <th>Başlık</th>
+            <th>Aktif</th>
+            <th style="width:220px;"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var s in Model)
+        {
+            <tr>
+                <td>@s.SortOrder</td>
+                <td>
+                    @if (!string.IsNullOrWhiteSpace(s.ImagePath))
+                    {
+                        <img src="@Url.Content(s.ImagePath)" alt="" style="height:48px; object-fit:cover; border-radius:6px;">
+                    }
+                </td>
+                <td>
+                    <div class="fw-semibold">@s.Heading</div>
+                    <div class="text-muted small">@s.Text</div>
+                </td>
+                <td>
+                    <form asp-action="ToggleActive" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@s.Id" />
+                        <button class="btn btn-sm @(s.IsActive ? "btn-success" : "btn-secondary")">
+                            @(s.IsActive ? "Aktif" : "Pasif")
+                        </button>
+                    </form>
+                </td>
+                <td class="text-end">
+                    <a asp-action="Edit" asp-route-id="@s.Id" class="btn btn-sm btn-outline-primary">Düzenle</a>
+                    <form asp-action="Delete" method="post" class="d-inline" onsubmit="return confirm('Silinsin mi?');">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@s.Id" />
+                        <button class="btn btn-sm btn-outline-danger">Sil</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
