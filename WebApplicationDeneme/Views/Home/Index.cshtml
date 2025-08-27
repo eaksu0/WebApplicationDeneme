@@ -4,16 +4,15 @@
 @{
     ViewData["Title"] = "Home";
 
-    // ViewBag üzerinden slider ve referanslar
-    var sliders = ViewBag.Sliders as IEnumerable<dynamic>; // Tipli VM'e geçmek istersen haber ver
-    var refs = ViewBag.References as List<Reference>;
+    var sliders = ViewBag.Sliders as IEnumerable<dynamic>;
+    var refs = ViewBag.References as List<Reference> ?? new List<Reference>();
 
-    // Küçük yardımcılar
     string SafeText(object? x, string fallback) => x is string s && !string.IsNullOrWhiteSpace(s) ? s : fallback;
     string SafeUrl(object? x, string fallback) => Url.Content(SafeText(x, fallback));
 }
 
 <style>
+    /* === HERO SLIDER === */
     .hero {
         border-radius: 20px;
         overflow: hidden;
@@ -43,22 +42,77 @@
             text-shadow: 0 2px 16px rgba(0,0,0,.35);
         }
 
+    /* === BLOGS === */
     .blog-card img {
         aspect-ratio: 16/9;
         object-fit: cover;
     }
 
-    .brand-logo {
-        opacity: .8;
-        transition: all .2s;
-        filter: grayscale(30%);
+    .blog-card {
+        transition: transform .2s, box-shadow .2s;
     }
 
-        .brand-logo:hover {
+        .blog-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(0,0,0,.08);
+        }
+
+    /* === REFERANSLAR === tam genişlik + şartlı infinite scroll */
+    .logos-wrap {
+        width: 100%;
+    }
+
+    .logos-marquee {
+        position: relative;
+        overflow: hidden;
+        padding: 1rem 0;
+    }
+
+    .logos-track {
+        display: flex;
+        align-items: center;
+        gap: 48px;
+        width: max-content;
+    }
+
+        .logos-track.animate {
+            animation: logos-scroll 18s linear infinite;
+        }
+
+    .logos-item {
+        flex: 0 0 auto;
+        display: grid;
+        place-items: center;
+        height: 120px; /* 80 → 120 yapıldı */
+        padding: 0 14px;
+        opacity: .9;
+        filter: grayscale(25%);
+        transition: opacity .2s, filter .2s, transform .2s;
+    }
+
+        .logos-item img {
+            max-height: 80px; /* 64 → 100 yapıldı */
+            width: auto;
+        }
+
+        .logos-item:hover {
             opacity: 1;
             filter: none;
             transform: translateY(-2px);
         }
+
+    @@keyframes logos-scroll {
+        from
+
+    {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
+
+    }
 </style>
 
 <div class="container py-4">
@@ -73,12 +127,7 @@
                     var i = 0;
                     foreach (var _ in sliders!)
                     {
-                        <button type="button"
-                                data-bs-target="#homeHero"
-                                data-bs-slide-to="@i"
-                                class="@(i == 0 ? "active" : null)"
-                                aria-current="@(i == 0 ? "true" : null)"
-                                aria-label="Slide @(i + 1)"></button>
+                        <button type="button" data-bs-target="#homeHero" data-bs-slide-to="@i" class="@(i == 0 ? "active" : null)" aria-current="@(i == 0 ? "true" : null)" aria-label="Slide @(i + 1)"></button>
                         ;
                         i++;
                     }
@@ -120,7 +169,6 @@
             }
             else
             {
-                <!-- Slider verisi yoksa: varsayılan tek slide -->
                 <div class="carousel-item active">
                     <img src="~/assets/img/hero-default.jpg" alt="TEST APPLICATION" loading="eager">
                     <div class="container h-100 d-flex align-items-center">
@@ -135,11 +183,11 @@
         </div>
 
         <button class="carousel-control-prev" type="button" data-bs-target="#homeHero" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="carousel-control-prev-icon"></span>
             <span class="visually-hidden">Önceki</span>
         </button>
         <button class="carousel-control-next" type="button" data-bs-target="#homeHero" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="carousel-control-next-icon"></span>
             <span class="visually-hidden">Sonraki</span>
         </button>
     </div>
@@ -155,7 +203,6 @@
             @foreach (var blog in (Model ?? Enumerable.Empty<Blog>()).Take(3))
             {
                 var blogImg = string.IsNullOrWhiteSpace(blog.ImagePath) ? "~/assets/img/blog-default.jpg" : blog.ImagePath;
-
                 <div class="col-md-4">
                     <div class="card blog-card h-100 border-0 shadow-sm">
                         <img src="@Url.Content(blogImg)" class="card-img-top" alt="@blog.Title" loading="lazy" />
@@ -170,26 +217,37 @@
         </div>
     </section>
 
-    <!-- REFERANSLAR -->
-    @if (refs != null && refs.Any())
-    {
-        <section class="mb-2">
-            <h3 class="mb-3">Referanslarımız</h3>
-            <div class="row g-3 align-items-center">
+</div> <!-- /.container -->
+<!-- REFERANSLAR: tam genişlik (container dışı), 5+ ise sonsuz kayma -->
+@if (refs.Any())
+{
+    <section class="mb-5 logos-wrap">
+        <div class="container mb-2">
+            <h3 class="mb-0">Referanslarımız</h3>
+        </div>
+
+        <div class="logos-marquee">
+            <div class="logos-track @(refs.Count >= 5 ? "animate" : "")">
                 @foreach (var r in refs)
                 {
                     var rimg = string.IsNullOrWhiteSpace(r.ImagePath) ? "~/assets/img/brands/brand-1.svg" : r.ImagePath;
-
-                    <div class="col-6 col-sm-4 col-md-3 col-lg-2 text-center">
-                        <div class="card h-100 border-0">
-                            <img src="@Url.Content(rimg)" class="img-fluid brand-logo" alt="@r.Name" loading="lazy" />
-                            <div class="card-body py-2">
-                                <div class="small text-muted">@r.Name</div>
-                            </div>
-                        </div>
+                    <div class="logos-item">
+                        <img src="@Url.Content(rimg)" alt="@r.Name" loading="lazy" />
                     </div>
                 }
+
+                @* 5 ve fazlaysa sonsuz döngü için tekrar ekle *@
+                @if (refs.Count >= 5)
+                {
+                    foreach (var r in refs)
+                    {
+                        var rimg = string.IsNullOrWhiteSpace(r.ImagePath) ? "~/assets/img/brands/brand-1.svg" : r.ImagePath;
+                        <div class="logos-item">
+                            <img src="@Url.Content(rimg)" alt="@r.Name" loading="lazy" />
+                        </div>
+                    }
+                }
             </div>
-        </section>
-    }
-</div>
+        </div>
+    </section>
+}

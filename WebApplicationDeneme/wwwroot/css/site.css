@@ -24,8 +24,7 @@ body {
 /* KMAB Navbar */
 .navbar-kmab {
     background: linear-gradient(135deg, #13547a, #80d0c7);
-    border-bottom-left-radius: 16px;
-    border-bottom-right-radius: 16px;
+   
 }
 
     .navbar-kmab .brand-text {

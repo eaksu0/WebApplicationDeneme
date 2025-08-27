@@ -1,0 +1,76 @@
+﻿@using WebApplicationDeneme.Models
+@model IEnumerable<WebApplicationDeneme.Models.Blog>
+@{
+    ViewData["Title"] = "Blog";
+    int page = ViewBag.Page ?? 1;
+    int pageSize = ViewBag.PageSize ?? 9;
+    int total = ViewBag.Total ?? (Model?.Count() ?? 0);
+    int pageCount = (int)Math.Ceiling(total / (double)pageSize);
+    string q = ViewBag.Query as string ?? "";
+}
+
+<style>
+    .blog-card img{ aspect-ratio:16/9; object-fit:cover; }
+    .blog-card{ transition:transform .2s, box-shadow .2s; }
+    .blog-card:hover{ transform: translateY(-2px); box-shadow: 0 10px 24px rgba(0,0,0,.08); }
+</style>
+
+<div class="container py-4">
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2 mb-3">
+        <h1 class="h3 mb-0">Blog</h1>
+
+        <form method="get" class="d-flex gap-2">
+            <input type="text" name="q" value="@q" class="form-control" placeholder="Ara..." />
+            <button class="btn btn-primary">Ara</button>
+        </form>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-light border">Henüz içerik bulunamadı.</div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var b in Model)
+            {
+                var img = string.IsNullOrWhiteSpace(b.ImagePath) ? "~/assets/img/blog-default.jpg" : b.ImagePath;
+                <div class="col-md-6 col-lg-4">
+                    <div class="card blog-card h-100 border-0 shadow-sm">
+                        <img src="@Url.Content(img)" class="card-img-top" alt="@b.Title" loading="lazy" />
+                        <div class="card-body d-flex flex-column">
+                            <div class="small text-muted">@b.CreatedAt.ToString("dd.MM.yyyy")</div>
+                            <h5 class="card-title mt-1">@b.Title</h5>
+                            <p class="card-text text-muted">@b.ShortText</p>
+                            <div class="mt-auto">
+                                <a asp-action="Details" asp-route-id="@b.Id" class="btn btn-outline-primary">Devamını Oku</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        @if (pageCount > 1)
+        {
+            <nav class="mt-4">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item @(page <= 1 ? "disabled" : null)">
+                        <a class="page-link" asp-action="Index" asp-route-q="@q" asp-route-page="@(page - 1)">Önceki</a>
+                    </li>
+
+                    @for (int i = 1; i <= pageCount; i++)
+                    {
+                        <li class="page-item @(i == page ? "active" : null)">
+                            <a class="page-link" asp-action="Index" asp-route-q="@q" asp-route-page="@i">@i</a>
+                        </li>
+                    }
+
+                    <li class="page-item @(page >= pageCount ? "disabled" : null)">
+                        <a class="page-link" asp-action="Index" asp-route-q="@q" asp-route-page="@(page + 1)">Sonraki</a>
+                    </li>
+                </ul>
+            </nav>
+        }
+    }
+</div>
