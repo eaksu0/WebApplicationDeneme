@@ -113,6 +113,21 @@
     }
 
     }
+
+   h2,h3 {
+        margin-top: 2.2rem;
+        margin-bottom: .8rem;
+        font-weight: 700;
+        scroll-margin-top: 100px;
+        /* Yalnızca yazı rengi degrade olacak */
+        background: linear-gradient(135deg, #13547a, #80d0c7);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text; /* Firefox desteği */
+    }
+    h3{
+        text-align:center;
+    }
 </style>
 
 <div class="container py-4">
@@ -209,7 +224,7 @@
                         <div class="card-body">
                             <h5 class="card-title">@blog.Title</h5>
                             <p class="card-text text-muted">@blog.ShortText</p>
-                            <a asp-controller="Blogs" asp-action="Details" asp-route-id="@blog.Id" class="btn btn-primary">Devamını Oku</a>
+                            <a  asp-controller="Blogs" asp-action="Details" asp-route-id="@blog.Id" class="btn btn-primary">Devamını Oku</a>
                         </div>
                     </div>
                 </div>
@@ -223,7 +238,9 @@
 {
     <section class="mb-5 logos-wrap">
         <div class="container mb-2">
-            <h3 class="mb-0">Referanslarımız</h3>
+            <h3 class="mb-0 ref">
+                Referanslarımız
+            </h3>
         </div>
 
         <div class="logos-marquee">

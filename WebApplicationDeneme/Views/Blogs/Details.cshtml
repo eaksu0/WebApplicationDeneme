@@ -1,69 +1,276 @@
 ﻿@model WebApplicationDeneme.Models.Blog
+@using System.Text.RegularExpressions
 @{
     ViewData["Title"] = Model.Title;
     var img = string.IsNullOrWhiteSpace(Model.ImagePath) ? "~/assets/img/blog-default.jpg" : Model.ImagePath;
     var related = ViewBag.Related as List<WebApplicationDeneme.Models.Blog> ?? new();
+
+    // (Opsiyonel) önceki/sonraki yazılar ViewBag ile geliyorsa gösterilecek
+    var prev = ViewBag.Prev as WebApplicationDeneme.Models.Blog;
+    var next = ViewBag.Next as WebApplicationDeneme.Models.Blog;
+
+    // Okuma süresi (yaklaşık 200 wpm)
+    var rawText = Model.LongText ?? "";
+    var onlyText = Regex.Replace(rawText, "<.*?>", " "); // html olursa temizle
+    var wordCount = Regex.Matches(onlyText, @"\w+").Count;
+    var readMin = Math.Max(1, (int)Math.Ceiling(wordCount / 200.0));
 }
 
 <style>
-    .blog-hero {
-        border-radius: 16px;
-        overflow: hidden;
+    :root {
+        --card-r: 18px;
+        --shadow: 0 10px 30px rgba(0,0,0,.08);
+        --muted: #6b7280;
     }
 
-    .related img {
-        aspect-ratio: 16/10;
-        object-fit: cover;
-        border-radius: .5rem;
+    /* HERO */
+    .hero {
+        position: relative;
+        border-radius: var(--card-r);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        isolation: isolate;
+    }
+
+        .hero img {
+            width: 100%;
+            height: min(60vh,520px);
+            object-fit: cover;
+            display: block;
+            transition: transform 0.6s ease;
+            transform-origin: center center;
+        }
+
+        .hero:hover img {
+            transform: scale(1.08); /* Hover büyüteç efekti */
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,.55), rgba(0,0,0,.05));
+            pointer-events: none;
+        }
+
+    .hero-content {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: clamp(16px, 3vw, 28px);
+        color: #fff;
+    }
+
+    .meta-badges .badge {
+        backdrop-filter: blur(6px);
+        background: rgba(255,255,255,.18);
+        border: 1px solid rgba(255,255,255,.25);
+    }
+
+    /* Makale gövdesi (prose) */
+    .prose {
+        font-size: 1.05rem;
+        line-height: 1.85;
+        color: #111827;
+    }
+
+        .prose h2 {
+            margin-top: 2.2rem;
+            margin-bottom: .8rem;
+            font-weight: 700;
+            scroll-margin-top: 100px;
+            /* Gradient yazı rengi */
+            background: linear-gradient(135deg, #13547a, #80d0c7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .prose h3 {
+            margin-top: 2.2rem;
+            margin-bottom: .8rem;
+            font-weight: 700;
+        }
+
+        .prose p {
+            margin: 1rem 0;
+        }
+
+        .prose img {
+            max-width: 100%;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            margin: 1.25rem 0;
+        }
+
+        .prose blockquote {
+            padding: 1rem 1.25rem;
+            border-left: 4px solid #3b82f6;
+            background: #f8fafc;
+            border-radius: 8px;
+        }
+
+        .prose ul {
+            padding-left: 1.2rem;
+        }
+
+        .prose li {
+            margin: .4rem 0;
+        }
+
+    .divider {
+        height: 1px;
+        background: linear-gradient(90deg,transparent,#e5e7eb,transparent);
+        margin: 1.5rem 0;
+    }
+
+    /* Sağ sütun */
+    .sticky-col {
+        position: sticky;
+        top: 90px;
+    }
+
+    .rel-card {
+        display: flex;
+        gap: 12px;
+        padding: 10px;
+        border-radius: 14px;
+        text-decoration: none;
+        color: inherit;
+        transition: .2s transform, .2s box-shadow, .2s background;
+    }
+
+        .rel-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+            background: #fff;
+        }
+
+        .rel-card img {
+            width: 112px;
+            height: 72px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+    /* Önceki/Sonraki */
+    .step-card {
+        border: 1px solid #eef2f7;
+        border-radius: 16px;
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        transition: .2s box-shadow, .2s transform;
+    }
+
+        .step-card:hover {
+            box-shadow: var(--shadow);
+            transform: translateY(-2px);
+        }
+
+    /* Küçük detaylar */
+    .muted {
+        color: var(--muted);
+    }
+
+    .btn-soft {
+        border-radius: 999px;
+        padding: .55rem 1rem;
     }
 </style>
 
-<div class="container py-4">
+<div class="container-lg py-4 py-md-5">
     <nav aria-label="breadcrumb" class="mb-3">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Ana Sayfa</a></li>
-            <li class="breadcrumb-item"><a asp-controller="Blogs" asp-action="Index">Blog</a></li>
             <li class="breadcrumb-item active" aria-current="page">@Model.Title</li>
         </ol>
     </nav>
 
-    <article class="row g-4">
-        <div class="col-lg-8">
-            <div class="blog-hero mb-3">
-                <img src="@Url.Content(img)" class="w-100" alt="@Model.Title" />
+    <!-- HERO -->
+    <figure class="hero mb-4 mb-md-5">
+        <img src="@Url.Content(img)" alt="@Model.Title" loading="lazy" />
+        <figcaption class="hero-content">
+            <div class="meta-badges mb-2 d-flex flex-wrap gap-2">
+                <span class="badge rounded-pill text-bg-light text-dark">
+                    Yayınlanma Tarihi: @Model.CreatedAt.ToString("dd MMMM yyyy")
+                </span>
+            </div>
+            <h1 class="mb-0" style="font-size:clamp(1.6rem, 3.2vw, 2.6rem);">@Model.Title</h1>
+        </figcaption>
+    </figure>
+
+    <div class="row g-4 g-lg-5">
+        <!-- MAKALE -->
+        <div class="col-xl-8">
+            <article class="prose">
+                <div style="white-space:pre-wrap;">@Model.LongText</div>
+            </article>
+
+            <div class="divider"></div>
+
+            <div class="d-flex flex-wrap gap-2">
+                <a class="btn btn-outline-secondary btn-soft" asp-action="Index">← Blog listesine dön</a>
             </div>
 
-            <h1 class="mb-2">@Model.Title</h1>
-            <div class="text-muted mb-4">
-                Yayın: @Model.CreatedAt.ToString("dd MMMM yyyy")
-            </div>
-
-            <div class="content lead" style="white-space:pre-wrap;">
-                @Model.LongText
-            </div>
-
-            <div class="mt-4">
-                <a class="btn btn-outline-secondary" asp-action="Index">← Blog listesine dön</a>
-            </div>
+            @if (prev != null || next != null)
+            {
+                <div class="mt-4 mt-md-5">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            @if (prev != null)
+                            {
+                                var pimg = string.IsNullOrWhiteSpace(prev.ImagePath) ? "~/assets/img/blog-default.jpg" : prev.ImagePath;
+                                <a class="text-decoration-none text-reset" asp-action="Details" asp-route-id="@prev.Id">
+                                    <div class="step-card">
+                                        <img src="@Url.Content(pimg)" alt="@prev.Title" width="64" height="64" style="object-fit:cover;border-radius:12px;" />
+                                        <div>
+                                            <div class="small muted">← Önceki</div>
+                                            <div class="fw-semibold">@prev.Title</div>
+                                        </div>
+                                    </div>
+                                </a>
+                            }
+                        </div>
+                        <div class="col-md-6">
+                            @if (next != null)
+                            {
+                                var nimg = string.IsNullOrWhiteSpace(next.ImagePath) ? "~/assets/img/blog-default.jpg" : next.ImagePath;
+                                <a class="text-decoration-none text-reset" asp-action="Details" asp-route-id="@next.Id">
+                                    <div class="step-card">
+                                        <img src="@Url.Content(nimg)" alt="@next.Title" width="64" height="64" style="object-fit:cover;border-radius:12px;" />
+                                        <div>
+                                            <div class="small muted">Sonraki →</div>
+                                            <div class="fw-semibold">@next.Title</div>
+                                        </div>
+                                    </div>
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
 
-        <aside class="col-lg-4">
-            <h5 class="mb-3">Diğer Yazılar</h5>
-            <div class="related d-grid gap-3">
-                @foreach (var b in related)
-                {
-                    var rimg = string.IsNullOrWhiteSpace(b.ImagePath) ? "~/assets/img/blog-default.jpg" : b.ImagePath;
-                    <a class="text-decoration-none text-reset" asp-action="Details" asp-route-id="@b.Id">
-                        <div class="d-flex gap-3">
-                            <img src="@Url.Content(rimg)" width="110" height="70" alt="@b.Title" />
-                            <div>
-                                <div class="fw-semibold">@b.Title</div>
-                                <div class="small text-muted">@b.CreatedAt.ToString("dd.MM.yyyy")</div>
+        <!-- SAĞ SÜTUN -->
+        <aside class="col-xl-4">
+            <div class="sticky-col">
+                <h5 class="mb-3">Diğer Yazılar</h5>
+                <div class="d-grid gap-2">
+                    @foreach (var b in related)
+                    {
+                        var rimg = string.IsNullOrWhiteSpace(b.ImagePath) ? "~/assets/img/blog-default.jpg" : b.ImagePath;
+                        <a class="rel-card" asp-action="Details" asp-route-id="@b.Id">
+                            <img src="@Url.Content(rimg)" width="112" height="72" alt="@b.Title" />
+                            <div class="min-w-0">
+                                <div class="fw-semibold text-truncate">@b.Title</div>
+                                <div class="small muted">@b.CreatedAt.ToString("dd.MM.yyyy")</div>
                             </div>
-                        </div>
-                    </a>
-                }
+                        </a>
+                    }
+                </div>
             </div>
         </aside>
-    </article>
+    </div>
 </div>
